@@ -17,6 +17,10 @@ public class VehicleService {
     @Transactional
     public Vehicle registerVehicle(String vehicleNumber, VehicleType vehicleType) {
 
+        if (vehicleType == null) {
+            throw new IllegalArgumentException("Vehicle type cannot be null");
+        }
+
         String vehicleNumberHash =
                 vehicleNumberHashService.generateVehicleNumberHash(vehicleNumber);
 

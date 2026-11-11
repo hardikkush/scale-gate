@@ -111,6 +111,13 @@ class VehicleServiceTest {
 
     }
 
-
+    @Test
+    void shouldRejectRegistrationWhenVehicleTypeIsNull() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> vehicleService.registerVehicle("UP32AB1234", null)
+        );
+        verifyNoInteractions(vehicleNumberHashService, vehicleRepository);
+    }
 
 }
