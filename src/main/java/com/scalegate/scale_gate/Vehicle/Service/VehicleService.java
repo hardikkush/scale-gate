@@ -1,5 +1,6 @@
 package com.scalegate.scale_gate.Vehicle.Service;
 
+import com.scalegate.scale_gate.Exception.DuplicateVehicleException;
 import com.scalegate.scale_gate.Vehicle.Repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class VehicleService {
                 vehicleNumberHashService.generateVehicleNumberHash(vehicleNumber);
 
         if (vehicleRepository.existsByVehicleNumberHash(vehicleNumberHash)) {
-            throw new IllegalArgumentException("Vehicle is already registered");
+            throw new DuplicateVehicleException("Vehicle is already registered");
         }
 
         Vehicle vehicle = Vehicle.builder()
