@@ -22,4 +22,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(errorResponse);
     }
+
+    @ExceptionHandler(VehicleNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleVehicleNotFound(
+            VehicleNotFoundException exception) {
+
+        Map<String, String> errorResponse = Map.of(
+                "message", exception.getMessage(),
+                "status", "404 NOT_FOUND"
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
+    }
+
 }

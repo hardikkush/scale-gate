@@ -36,5 +36,22 @@ public class VehicleController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-}
 
+    @GetMapping("/{id}")
+    public ResponseEntity<VehicleRegistrationResponse> getVehicleById(
+            @PathVariable Long id) {
+
+        Vehicle vehicle = vehicleService.getVehicleById(id);
+
+        VehicleRegistrationResponse response =
+                VehicleRegistrationResponse.builder()
+                        .message("Vehicle found successfully")
+                        .vehicleType(vehicle.getVehicleType())
+                        .createdAt(vehicle.getCreatedAt())
+                        .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+
+}

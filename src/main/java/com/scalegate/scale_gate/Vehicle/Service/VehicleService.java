@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.scalegate.scale_gate.Vehicle.Vehicle;
 import com.scalegate.scale_gate.Vehicle.VehicleType;
 import org.springframework.transaction.annotation.Transactional;
+import com.scalegate.scale_gate.Exception.VehicleNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -36,4 +37,11 @@ public class VehicleService {
 
         return vehicleRepository.save(vehicle);
     }
+
+    public Vehicle getVehicleById(Long vehicleId) {
+        return vehicleRepository.findById(vehicleId)
+                .orElseThrow(() ->
+                        new VehicleNotFoundException("Vehicle not found"));
+    }
+
 }
