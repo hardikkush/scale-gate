@@ -30,6 +30,7 @@ public class VehicleController {
         VehicleRegistrationResponse response =
                 VehicleRegistrationResponse.builder()
                         .message("Vehicle registered successfully")
+                        .vehicleId(vehicle.getVehicleId())
                         .vehicleType(vehicle.getVehicleType())
                         .createdAt(vehicle.getCreatedAt())
                         .build();
@@ -46,6 +47,7 @@ public class VehicleController {
         VehicleRegistrationResponse response =
                 VehicleRegistrationResponse.builder()
                         .message("Vehicle found successfully")
+                        .vehicleId(vehicle.getVehicleId())
                         .vehicleType(vehicle.getVehicleType())
                         .createdAt(vehicle.getCreatedAt())
                         .build();

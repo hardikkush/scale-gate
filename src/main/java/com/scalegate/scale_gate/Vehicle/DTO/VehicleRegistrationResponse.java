@@ -11,6 +11,7 @@ import java.time.OffsetDateTime;
 public class VehicleRegistrationResponse {
 
     private String message;
+    private Long vehicleId;
     private VehicleType vehicleType;
     private OffsetDateTime createdAt;
 
