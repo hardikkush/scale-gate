@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +45,19 @@ public class TollTransactionService {
             case HEAVY_VEHICLE -> BigDecimal.valueOf(450);
             case TWO_WHEELER -> BigDecimal.valueOf(150);
         };
+    }
+
+    public List<TollTransaction> getTransactionsByVehicleId(Long vehicleId) {
+
+        // First verify that the vehicle exists
+        vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new VehicleNotFoundException(
+                        "Vehicle not found with ID: " + vehicleId
+                ));
+
+        // Fetch all transactions belonging to this vehicle
+        return tollTransactionRepository
+                .findAllByVehicle_VehicleId(vehicleId);
     }
 }
 
