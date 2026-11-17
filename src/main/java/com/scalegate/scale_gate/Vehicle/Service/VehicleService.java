@@ -1,13 +1,16 @@
+
 package com.scalegate.scale_gate.Vehicle.Service;
 
 import com.scalegate.scale_gate.Exception.DuplicateVehicleException;
+import com.scalegate.scale_gate.Exception.VehicleNotFoundException;
+import com.scalegate.scale_gate.Vehicle.DTO.VehicleRegistrationResponse;
 import com.scalegate.scale_gate.Vehicle.Repository.VehicleRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import com.scalegate.scale_gate.Vehicle.Vehicle;
 import com.scalegate.scale_gate.Vehicle.VehicleType;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.scalegate.scale_gate.Exception.VehicleNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -38,10 +41,19 @@ public class VehicleService {
         return vehicleRepository.save(vehicle);
     }
 
-    public Vehicle getVehicleById(Long vehicleId) {
-        return vehicleRepository.findById(vehicleId)
+    @Cacheable(value = "vehicles", key = "#vehicleId")
+    @Transactional(readOnly = true)
+    public VehicleRegistrationResponse getVehicleById(Long vehicleId) {
+
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() ->
                         new VehicleNotFoundException("Vehicle not found"));
-    }
 
+        return VehicleRegistrationResponse.builder()
+                .message("Vehicle found successfully")
+                .vehicleId(vehicle.getVehicleId())
+                .vehicleType(vehicle.getVehicleType())
+                .createdAt(vehicle.getCreatedAt())
+                .build();
+    }
 }

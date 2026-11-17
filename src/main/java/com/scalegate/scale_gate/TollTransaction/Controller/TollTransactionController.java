@@ -46,17 +46,8 @@ public class TollTransactionController {
     public ResponseEntity<List<TollTransactionHistoryResponse>> getTransactionsByVehicleId(
             @PathVariable Long vehicleId) {
 
-        List<TollTransaction> transactions =
+        List<TollTransactionHistoryResponse> response =
                 tollTransactionService.getTransactionsByVehicleId(vehicleId);
-
-        List<TollTransactionHistoryResponse> response = transactions.stream()
-                .map(transaction -> TollTransactionHistoryResponse.builder()
-                        .transactionId(transaction.getTransactionId())
-                        .vehicleId(transaction.getVehicle().getVehicleId())
-                        .amount(transaction.getAmount())
-                        .createdAt(transaction.getCreatedAt())
-                        .build())
-                .toList();
 
         return ResponseEntity.ok(response);
     }

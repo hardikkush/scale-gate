@@ -4,11 +4,12 @@ import com.scalegate.scale_gate.Vehicle.VehicleType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @Getter
 @Builder
-public class VehicleRegistrationResponse {
+public class VehicleRegistrationResponse implements Serializable {
 
     private String message;
     private Long vehicleId;

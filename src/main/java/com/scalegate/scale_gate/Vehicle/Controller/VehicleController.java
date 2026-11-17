@@ -42,18 +42,9 @@ public class VehicleController {
     public ResponseEntity<VehicleRegistrationResponse> getVehicleById(
             @PathVariable Long id) {
 
-        Vehicle vehicle = vehicleService.getVehicleById(id);
-
-        VehicleRegistrationResponse response =
-                VehicleRegistrationResponse.builder()
-                        .message("Vehicle found successfully")
-                        .vehicleId(vehicle.getVehicleId())
-                        .vehicleType(vehicle.getVehicleType())
-                        .createdAt(vehicle.getCreatedAt())
-                        .build();
+        VehicleRegistrationResponse response = vehicleService.getVehicleById(id);
 
         return ResponseEntity.ok(response);
     }
-
 
 }

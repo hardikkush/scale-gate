@@ -10,6 +10,8 @@ import com.scalegate.scale_gate.Vehicle.VehicleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.scalegate.scale_gate.TollTransaction.DTO.TollTransactionHistoryResponse;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -47,7 +49,9 @@ public class TollTransactionService {
         };
     }
 
-    public List<TollTransaction> getTransactionsByVehicleId(Long vehicleId) {
+    @Cacheable(value = "tollHistory", key = "#vehicleId")
+    @Transactional(readOnly = true)
+    public List<TollTransactionHistoryResponse> getTransactionsByVehicleId(Long vehicleId) {
 
         // First verify that the vehicle exists
         vehicleRepository.findById(vehicleId)
@@ -57,7 +61,15 @@ public class TollTransactionService {
 
         // Fetch all transactions belonging to this vehicle
         return tollTransactionRepository
-                .findAllByVehicle_VehicleId(vehicleId);
+                .findAllByVehicle_VehicleId(vehicleId)
+                .stream()
+                .map(transaction -> TollTransactionHistoryResponse.builder()
+                        .transactionId(transaction.getTransactionId())
+                        .vehicleId(transaction.getVehicle().getVehicleId())
+                        .amount(transaction.getAmount())
+                        .createdAt(transaction.getCreatedAt())
+                        .build())
+                .toList();
     }
 }
 
