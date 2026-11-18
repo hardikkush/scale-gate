@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.scalegate.scale_gate.TollTransaction.DTO.TollTransactionHistoryResponse;
 import org.springframework.cache.annotation.Cacheable;
+import com.scalegate.scale_gate.TollTransaction.Event.TollTransactionCreatedEvent;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,6 +24,7 @@ public class TollTransactionService {
 
     private final VehicleRepository vehicleRepository;
     private final TollTransactionRepository tollTransactionRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public TollTransaction createTollTransaction(Long vehicleId) {
@@ -37,7 +40,14 @@ public class TollTransactionService {
                 .amount(amount)
                 .build();
 
-        return tollTransactionRepository.save(transaction);
+        TollTransaction savedTransaction =
+                tollTransactionRepository.save(transaction);
+
+        eventPublisher.publishEvent(
+                new TollTransactionCreatedEvent(vehicleId)
+        );
+
+        return savedTransaction;
     }
 
     private BigDecimal calculateToll(VehicleType vehicleType) {
@@ -71,5 +81,7 @@ public class TollTransactionService {
                         .build())
                 .toList();
     }
+
+
 }
 
