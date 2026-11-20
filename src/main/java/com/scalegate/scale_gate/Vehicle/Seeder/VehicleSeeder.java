@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,33 +22,35 @@ public class VehicleSeeder implements CommandLineRunner {
     private final VehicleRepository vehicleRepository;
     private final VehicleNumberHashService vehicleNumberHashService;
 
-    private static final int ADDITIONAL_VEHICLES = 9000;
-    private static final int EXPECTED_TOTAL_VEHICLES = 10005;
+    private static final int ADDITIONAL_VEHICLES = 15000;
+    private static final int EXPECTED_TOTAL_VEHICLES = 25005;
 
     @Override
+    @Transactional
     public void run(String... args) {
 
         List<Vehicle> vehicles = new ArrayList<>();
 
-        // Generate 9,000 additional vehicles.
+        // Generate 15,000 additional benchmark vehicles.
+
         addVehicles(
                 vehicles,
-                "GJ",
-                3600,
+                "JK",
+                5000,
                 VehicleType.LIGHT_VEHICLE
         );
 
         addVehicles(
                 vehicles,
-                "BH",
-                3150,
+                "KL",
+                5000,
                 VehicleType.HEAVY_VEHICLE
         );
 
         addVehicles(
                 vehicles,
-                "TM",
-                2250,
+                "LW",
+                5000,
                 VehicleType.TWO_WHEELER
         );
 
@@ -76,11 +79,11 @@ public class VehicleSeeder implements CommandLineRunner {
             );
         }
 
-        // Insert only the additional 9,000 vehicles.
+        // Insert the additional 15,000 vehicles.
         vehicleRepository.saveAll(vehicles);
 
         System.out.println(
-                "Additional 9,000 benchmark vehicles seeded successfully."
+                "Additional 15,000 benchmark vehicles seeded successfully."
         );
 
         // Verify final database count.
