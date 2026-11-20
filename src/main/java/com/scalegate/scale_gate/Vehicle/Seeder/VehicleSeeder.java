@@ -21,37 +21,82 @@ public class VehicleSeeder implements CommandLineRunner {
     private final VehicleRepository vehicleRepository;
     private final VehicleNumberHashService vehicleNumberHashService;
 
+    private static final int ADDITIONAL_VEHICLES = 9000;
+    private static final int EXPECTED_TOTAL_VEHICLES = 10005;
+
     @Override
     public void run(String... args) {
 
         List<Vehicle> vehicles = new ArrayList<>();
 
-        addVehicles(vehicles, "PJ", 400, VehicleType.LIGHT_VEHICLE);
-        addVehicles(vehicles, "HM", 350, VehicleType.HEAVY_VEHICLE);
-        addVehicles(vehicles, "GA", 250, VehicleType.TWO_WHEELER);
+        // Generate 9,000 additional vehicles.
+        addVehicles(
+                vehicles,
+                "GJ",
+                3600,
+                VehicleType.LIGHT_VEHICLE
+        );
 
+        addVehicles(
+                vehicles,
+                "BH",
+                3150,
+                VehicleType.HEAVY_VEHICLE
+        );
+
+        addVehicles(
+                vehicles,
+                "TM",
+                2250,
+                VehicleType.TWO_WHEELER
+        );
+
+        // Extract generated vehicle hashes.
         List<String> hashes = vehicles.stream()
                 .map(Vehicle::getVehicleNumberHash)
                 .toList();
 
+        // Check how many of these vehicles already exist.
         long existingCount =
                 vehicleRepository.countByVehicleNumberHashIn(hashes);
 
-        if (existingCount == 1000) {
-            System.out.println("Vehicle dataset already exists. Skipping seeding.");
+        if (existingCount == ADDITIONAL_VEHICLES) {
+            System.out.println(
+                    "Additional vehicle dataset already exists. Skipping seeding."
+            );
             return;
         }
 
         if (existingCount > 0) {
             throw new IllegalStateException(
-                    "Partial vehicle dataset detected. Expected 1000 records but found "
+                    "Partial additional vehicle dataset detected. Expected "
+                            + ADDITIONAL_VEHICLES
+                            + " records but found "
                             + existingCount
             );
         }
 
+        // Insert only the additional 9,000 vehicles.
         vehicleRepository.saveAll(vehicles);
 
-        System.out.println("1000 benchmark vehicles seeded successfully.");
+        System.out.println(
+                "Additional 9,000 benchmark vehicles seeded successfully."
+        );
+
+        // Verify final database count.
+        long totalCount = vehicleRepository.count();
+
+        System.out.println(
+                "Total vehicles in database: " + totalCount
+        );
+
+        if (totalCount != EXPECTED_TOTAL_VEHICLES) {
+            throw new IllegalStateException(
+                    "Expected " + EXPECTED_TOTAL_VEHICLES
+                            + " total vehicles but found "
+                            + totalCount
+            );
+        }
     }
 
     private void addVehicles(
