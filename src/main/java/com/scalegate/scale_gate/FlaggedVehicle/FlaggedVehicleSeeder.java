@@ -26,15 +26,16 @@ public class FlaggedVehicleSeeder implements CommandLineRunner {
         }
 
         List<String> mockVehicleNumbers = List.of(
-                "DL01CR1001", "DL01CR1002", "DL01CR1003",
-                "DL01CR1004", "DL01CR1005", "DL02CR1006",
-                "DL02CR1007", "DL02CR1008", "DL02CR1009",
-                "DL02CR1010", "HR26CR1011", "HR26CR1012",
-                "HR26CR1013", "HR26CR1014", "HR26CR1015",
-                "UP16CR1016", "UP16CR1017", "UP16CR1018",
-                "UP16CR1019", "UP16CR1020", "RJ14CR1021",
-                "RJ14CR1022", "RJ14CR1023", "RJ14CR1024",
-                "RJ14CR1025"
+                "WB1001", "WB1002", "WB1003",
+                "WB1004", "WB1005", "WB1006",
+                "WB1007", "WB1008", "WB1009",
+                "WB1010", "WB1011", "WB1012",
+                "WB1013",
+
+                "AS2001", "AS2002", "AS2003",
+                "AS2004", "AS2005", "AS2006",
+                "AS2007", "AS2008", "AS2009",
+                "AS2010", "AS2011", "AS2012"
         );
 
         for (String vehicleNumber : mockVehicleNumbers) {
